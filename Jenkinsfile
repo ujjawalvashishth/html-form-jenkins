@@ -1,4 +1,3 @@
-```groovy
 pipeline {
     agent any
 
@@ -27,14 +26,11 @@ pipeline {
         success {
             echo 'SUCCESS: All HTML form tests passed!'
         }
-
         failure {
             echo 'FAILURE: Check the Console Output for errors.'
         }
-
         always {
             echo 'Pipeline execution completed.'
         }
     }
 }
-```
