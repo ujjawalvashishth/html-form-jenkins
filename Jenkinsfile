@@ -8,47 +8,26 @@ pipeline {
             }
         }
 
-        stage('Check HTML File') {
+        stage('Check Python') {
             steps {
-                script {
-                    if (!fileExists('index.html')) {
-                        error('FAIL: index.html not found')
-                    }
-                }
-                echo 'PASS: index.html exists'
+                bat 'python --version'
             }
         }
 
-        stage('Automated Form Tests') {
+        stage('Test HTML Form') {
             steps {
-                script {
-                    def html = readFile('index.html')
-
-                    def checks = [
-                        'Form element': /<form\b/,
-                        'Name field': /id="name"/,
-                        'Email field': /type="email"/,
-                        'Contact field': /id="contact"/,
-                        'Submit button': /type="submit"/
-                    ]
-
-                    checks.each { label, pattern ->
-                        if (!(html =~ pattern).find()) {
-                            error("FAIL: ${label} missing")
-                        }
-                        echo "PASS: ${label} verified"
-                    }
-                }
+                bat 'python -m unittest -v test_form.py'
             }
         }
     }
 
     post {
         success {
-            echo 'ALL TESTS PASSED!'
+            echo 'SUCCESS: All HTML form tests passed!'
         }
+
         failure {
-            echo 'PIPELINE FAILED. CHECK CONSOLE OUTPUT.'
+            echo 'FAILURE: Check the console output for errors.'
         }
     }
 }
